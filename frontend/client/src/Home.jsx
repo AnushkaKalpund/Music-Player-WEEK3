@@ -1,71 +1,118 @@
-import React from "react";
-import { Link } from "react-router-dom";
+// src/components/Home.jsx
+import React, { useState } from 'react';
+import './Home.css'; // Create this CSS file to hold styles for this component
 
-function Home() {
-  const user = JSON.parse(localStorage.getItem("user")) || { name: "Guest" };
+const Home = () => {
+  // Initialize state for song controls
+  const [songIndex, setSongIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [audioElement] = useState(new Audio(`/assets/songs/song1.mp3`));
+
+  const songs = [
+    { songName: "Pink Venom by BLACKPINK", filePath: "songs/song1.mp3", coverPath: "./public/assets/covers/1.jpg" },
+    { songName: "Kill this love by BLACKPINK", filePath: "songs/song2.mp3", coverPath: "./public/assets/covers/5.jpg" },
+    { songName: "Warriyo - Mortals [NCS Release]", filePath: "songs/1.mp3", coverPath: "./public/assets/covers/1.jpg" },
+    { songName: "Cielo - Huma-Huma", filePath: "songs/2.mp3", coverPath: "/covers/2.jpg" },
+    { songName: "DEAF KEV - Invincible [NCS Release]-320k", filePath: "songs/3.mp3", coverPath: "./public/assets/covers/3.jpg" },
+    { songName: "Different Heaven & EH!DE - My Heart [NCS Release]", filePath: "songs/4.mp3", coverPath: "./public/assets/covers/4.jpg" },
+    
+    
+  ];
+
+  const playPause = () => {
+    if (isPlaying) {
+      audioElement.pause();
+    } else {
+      audioElement.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const changeSong = (newIndex) => {
+    setSongIndex(newIndex);
+    audioElement.src = `/assets/${songs[newIndex].filePath}`;
+    setProgress(0);
+    audioElement.play();
+  };
+
+  // Update progress bar
+  audioElement.ontimeupdate = () => {
+    if (audioElement.duration) {
+      const progressValue = (audioElement.currentTime / audioElement.duration) * 100;
+      setProgress(progressValue);
+    }
+  };
+
+  const handleProgressChange = (e) => {
+    const newTime = (e.target.value / 100) * audioElement.duration;
+    audioElement.currentTime = newTime;
+    setProgress(e.target.value);
+  };
+
+  const handleLogout = () => {
+    // Clear session or redirect to login
+    console.log('Logout button clicked');
+    window.location.href = '/login'; // Redirect to login page
+  };
 
   return (
-    <div className="container mt-5">
-      <h1>Welcome, {user.name}!</h1>
-      <p>Thank you for logging in. Explore the features available to you:</p>
+    <div className="container">
+      {/* Navigation */}
+      <nav>
+        <ul>
+          <li className="brand"><img src="/assets/logo.png" alt="Spotify" /> Spotify</li>
+          <li>Home</li>
+          <li>About</li>
+          <li>
+            <button className="logout-button" onClick={handleLogout}>
+              Logout
+            </button>
+          </li>
+        </ul>
+      </nav>
 
-      <div className="row mt-4">
-        {/* Feature 1 */}
-        <div className="col-md-4">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h5 className="card-title">Profile</h5>
-              <p className="card-text">
-                View and edit your personal information and settings.
-              </p>
-              <Link to="/profile" className="btn btn-primary">
-                Go to Profile
-              </Link>
-            </div>
+      {/* Song List */}
+      <div className="songList">
+        {songs.map((song, index) => (
+          <div className="songItem" key={index}>
+            <img alt={song.songName} src={`./assets/covers/${index + 1}.jpg`} />
+            <span className="songName">{song.songName}</span>
+            <span className="songlistplay">
+              <span className="timestamp">
+                05:34
+                <i
+                  className={`far songItemPlay ${index === songIndex && isPlaying ? 'fa-pause-circle' : 'fa-play-circle'}`}
+                  onClick={() => changeSong(index)}
+                />
+              </span>
+            </span>
           </div>
-        </div>
-
-        {/* Feature 2 */}
-        <div className="col-md-4">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h5 className="card-title">Dashboard</h5>
-              <p className="card-text">
-                Access your dashboard and view statistics or other data.
-              </p>
-              <Link to="/dashboard" className="btn btn-success">
-                Open Dashboard
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Feature 3 */}
-        <div className="col-md-4">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h5 className="card-title">Settings</h5>
-              <p className="card-text">
-                Update your preferences and application settings.
-              </p>
-              <Link to="/settings" className="btn btn-warning">
-                Go to Settings
-              </Link>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
 
-      <div className="mt-5">
-        <h4>Recent Updates</h4>
-        <ul>
-          <li>New feature added to the dashboard!</li>
-          <li>Bug fixes and performance improvements.</li>
-          <li>Stay tuned for more updates.</li>
-        </ul>
+      {/* Bottom Control Bar */}
+      <div className="bottom">
+        <input
+          type="range"
+          id="myProgressBar"
+          min="0"
+          max="100"
+          value={progress}
+          onChange={handleProgressChange}
+        />
+        <div className="icons">
+          <i className="fas fa-3x fa-step-backward" onClick={() => changeSong(songIndex > 0 ? songIndex - 1 : songs.length - 1)} />
+          <i className={`far fa-3x ${isPlaying ? 'fa-pause-circle' : 'fa-play-circle'}`} onClick={playPause} />
+          <i className="fas fa-3x fa-step-forward" onClick={() => changeSong(songIndex < songs.length - 1 ? songIndex + 1 : 0)} />
+        </div>
+        <div className="songInfo">
+          <img src="playing.gif" width="42px" alt="" />
+          <span id="masterSongName">{songs[songIndex].songName}</span>
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default Home;
