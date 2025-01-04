@@ -16,6 +16,12 @@ const Home = () => {
     { songName: "Cielo - Huma-Huma", filePath: "songs/2.mp3", coverPath: "/covers/2.jpg" },
     { songName: "DEAF KEV - Invincible [NCS Release]-320k", filePath: "songs/3.mp3", coverPath: "./public/assets/covers/3.jpg" },
     { songName: "Different Heaven & EH!DE - My Heart [NCS Release]", filePath: "songs/4.mp3", coverPath: "./public/assets/covers/4.jpg" },
+    { songName: "Pink Venom by BLACKPINK", filePath: "songs/song1.mp3", coverPath: "./public/assets/covers/1.jpg" },
+    { songName: "Kill this love by BLACKPINK", filePath: "songs/song2.mp3", coverPath: "./public/assets/covers/5.jpg" },
+    { songName: "Warriyo - Mortals [NCS Release]", filePath: "songs/1.mp3", coverPath: "./public/assets/covers/1.jpg" },
+    { songName: "Cielo - Huma-Huma", filePath: "songs/2.mp3", coverPath: "/covers/2.jpg" },
+    { songName: "DEAF KEV - Invincible [NCS Release]-320k", filePath: "songs/3.mp3", coverPath: "./public/assets/covers/3.jpg" },
+    { songName: "Different Heaven & EH!DE - My Heart [NCS Release]", filePath: "songs/4.mp3", coverPath: "./public/assets/covers/4.jpg" },
     
     
   ];
